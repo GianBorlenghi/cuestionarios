@@ -1,0 +1,27 @@
+[
+    {
+      "id": 1,
+      "nombre_ap": "Jorge",
+      "usuario": "jorge12",
+      "pw" :12345,
+      "mail": "borlenghigian@gmail.com",
+      "curso": "3"
+    },
+    {
+        "id": 2,
+        "nombre_ap": "Juancar",
+        "usuario": "juanca343",
+        "pw" :"54321",
+        "mail": "gianclas@gmail.com",
+        "curso": "3"
+      },
+      {
+        "id": 2,
+        "nombre_ap": "alberico",
+        "usuario": "al123",
+        "pw" :"3321",
+        "mail": "gianborlenghi@hotmail.com",
+        "curso": "2"
+      }
+  ]
+  

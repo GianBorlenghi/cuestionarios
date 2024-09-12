@@ -32,6 +32,32 @@ h1 {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+/* Aplica a todos los input y button dentro del formulario de login */
+#loginForm input,
+#loginForm button {
+    width: 300px; /* Puedes ajustar este valor según tus necesidades */
+    padding: 10px; /* Añade algo de espacio interno */
+    margin: 10px 0; /* Espacio entre los elementos */
+    border-radius: 5px; /* Bordes redondeados para mejor estética */
+    border: 1px solid #ccc; /* Borde suave */
+    box-sizing: border-box; /* Asegura que el padding no agrande el width */
+}
+
+#loginForm button {
+    background-color: #007bff; /* Color de fondo del botón */
+    color: white; /* Color del texto */
+    border: none; /* Sin borde */
+    cursor: pointer; /* Muestra un cursor de mano */
+}
+
+#loginForm button:hover {
+    background-color: #0056b3; /* Color de fondo al pasar el ratón */
+}
+
+#loginError {
+    color: red;
+    margin-top: 10px;
+}
 .question p {
     margin: 0 0 10px 0;
     font-weight: bold;
@@ -103,5 +129,18 @@ button:hover {
 
     button {
         padding: 15px;
+    }
+}
+
+
+@media (max-width: 767px) {
+    #loginForm input,
+    #loginForm button,
+    #quizForm button {
+        width: 100%; /* En pantallas pequeñas, los inputs y botones ocupan el 100% del ancho del contenedor */
+    }
+
+    .container {
+        padding: 10px; /* Reduce el padding en pantallas pequeñas */
     }
 }

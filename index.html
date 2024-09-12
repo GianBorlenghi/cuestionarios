@@ -5,33 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cuestionario Random</title>
     <link rel="stylesheet" href="estilos.css">
-    <script type="text/javascript"
-        src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
-</script>
-
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 </head>
-<body onload="checkIfAlreadyAnswered()">
-    <div id="timerContainer">
-        Tiempo restante: <span id="timer">00:00</span>
-    </div>
-    <div class="container">
-        
-        <h1>Cuestionario evaluativo</h1>
-        <form id="quizForm">
-            <div id="quizContainer">
-                <label for="">Ingrese sus datos</label>
-                <input type="email" name="question" placeholder="Ingrese su mail" class="question" id="mail" required>
-                <input type="text" name="question" placeholder="Ingrese su nombre y apellido" class="question" id="nyap" required>
-            </div>
-            <button type="submit" id="btnEnviar">Enviar</button>
+<body onload="checkLoginStatus()">
+    <!-- Formulario de Login -->
+    <div id="loginContainer">
+        <h2>Login</h2>
+        <form id="loginForm">
+            <label for="username">Usuario</label>
+            <input type="text" id="username" placeholder="Ingrese su usuario" required>
+            <label for="password">Contraseña</label>
+            <input type="password" id="password" placeholder="Ingrese su contraseña" required>
+            <button type="submit">Iniciar sesión</button>
         </form>
-        <div id="scoreContainer" class="hidden">
-            <h2>Tu puntuación es: <span id="score"></span></h2>
-        </div>
-        <div id="resultsContainer"></div>
-
+        <div id="loginError" class="hidden">Credenciales incorrectas. Inténtelo de nuevo.</div>
     </div>
+
+    <!-- Contenido del Cuestionario (oculto por defecto) -->
+    <div id="quizContent" class="hidden">
+        <div id="timerContainer">
+            Tiempo restante: <span id="timer">00:00</span>
+        </div>
+        <div class="container">
+            <h1>Cuestionario evaluativo</h1>
+            <form id="quizForm">
+                <div id="quizContainer">
+                    <label for="">Ingrese sus datos</label>
+                    <input type="email" name="question" placeholder="Ingrese su mail" class="question" id="mail" required>
+                    <input type="text" name="question" placeholder="Ingrese su nombre y apellido" class="question" id="nyap" required>
+                </div>
+                <button type="submit" id="btnEnviar">Enviar</button>
+            </form>
+            <div id="scoreContainer" class="hidden">
+                <h2>Tu puntuación es: <span id="score"></span></h2>
+            </div>
+            <div id="resultsContainer"></div>
+        </div>
+    </div>
+
     <script src="app.js"></script>
 </body>
 </html>
