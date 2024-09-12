@@ -1,0 +1,95 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	background: #f2f2f2;
+
+}
+
+.hide{
+	display: none;
+}
+
+body {
+	font-family: 'Open Sans', sans-serif;
+	
+}
+header {
+    border-bottom: 2px solid #999;
+    height: 12vh;
+    background-color: #0A2647;
+    color: #fff;
+}
+#uploadButton{
+	margin-top:30px;
+	margin-left:10px;
+	padding:5px;
+	background-color: #bbb;
+}
+#uploadButton:hover{
+	background-color: #ccc;}
+nav li>a {
+    color: #2C74B3;
+}
+
+figure {
+    display: inline-block;
+    padding: 5px;
+	border:1px solid black;
+
+}
+
+.logo {
+    width: 200px;
+    height: 100px;
+}
+
+
+
+
+
+nav ul>li a:hover {
+    background-color: #2C74B3;
+    
+}
+
+.contenedor {
+	max-width: 90%;
+	width: 400px;
+	margin: 80px auto;
+	
+}
+
+.formulario input[type='text'],.formulario input[type='email'] {
+	padding: 20px;
+	border: none;
+	background: #fff;
+	width: 100%;
+	border-radius: 5px;
+	box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+	font-size: 20px;
+	margin-bottom: 20px;
+	font-family: 'Open Sans', sans-serif;
+}
+
+.btn {
+	width: 100%;
+	border: none;
+	background: rgb(0, 0, 0);
+	color: #fff;
+	cursor: pointer;
+	padding: 20px;
+	font-size: 20px;
+	border-radius: 5px;
+	font-family: 'Open Sans', sans-serif;
+}
+
+ .btn:hover {
+	background: #3e14b2;
+}
+
+.contenedorQR {
+	display: flex;
+	justify-content: center;
+	padding: 40px 0;
+}

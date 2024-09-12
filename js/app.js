@@ -22,6 +22,8 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
             // Guardar el estado de login en localStorage
             localStorage.setItem('isLoggedIn', 'true');
             localStorage.setItem('mail',existeUsuario.mail)
+            localStorage.setItem('nyap',existeUsuario.nombre_ap)
+            $("#loginContainer").addClass("hidden")
             showQuiz();
         } else {
             console.log("Contraseña incorrecta");
@@ -394,9 +396,9 @@ console.log($(mail).val())
     const emailParams = {
         to_email: 'gianborlenghi@abc.gob.ar', // Cambia esto por tu dirección de correo
         subject: 'Resultado del cuestionario',
-        nombre:$("#nyap").val(),
+        nombre:localStorage.getItem("nyap"),
         message:emailContent,
-        mail:$(mail).val()+';gianborlenghi@abc.gob.ar'
+        mail:localStorage.getItem("mail")+';gianborlenghi@abc.gob.ar'
     };
 
     emailjs.send('service_gfwx6fe', 'template_sobke27', emailParams)

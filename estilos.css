@@ -5,6 +5,25 @@ body {
     margin: 0;
     padding: 0;
 }
+figure {
+    display: flex;
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center; /* Centra verticalmente */
+    padding: 5px;
+    border: 1px solid black;
+    border-bottom: 1px solid black;
+    width: calc(100% - 22px); /* Adjust width to fit within container */
+    width: 100%;
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+    height: 110px;
+    background-color: #eee;
+}
+.logo {
+    width: 300px;
+    height: 100px;
+}
 
 .container {
     width: 90%;
@@ -12,14 +31,7 @@ body {
     margin: auto;
     padding: 20px;
 }
-#mail,#nyap{
-    box-sizing: border-box;
-    width: 350px;
-    border:none;
-    padding:15px;
-    font-size: 17px;
-    display: block;
-}
+
 h1 {
     text-align: center;
 }
@@ -35,6 +47,13 @@ h1 {
 /* Aplica a todos los input y button dentro del formulario de login */
 #loginForm input,
 #loginForm button {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Espacio entre los elementos del formulario */
     width: 300px; /* Puedes ajustar este valor según tus necesidades */
     padding: 10px; /* Añade algo de espacio interno */
     margin: 10px 0; /* Espacio entre los elementos */
@@ -42,6 +61,13 @@ h1 {
     border: 1px solid #ccc; /* Borde suave */
     box-sizing: border-box; /* Asegura que el padding no agrande el width */
 }
+
+/* Estilos para centrar el loginContainer */
+
+
+/* Estilos adicionales para el formulario */
+
+
 
 #loginForm button {
     background-color: #007bff; /* Color de fondo del botón */
@@ -117,6 +143,9 @@ button:hover {
     .container {
         width: 95%;
         padding: 10px;
+    }
+    figure{
+        width: 90%;
     }
 
     .question {
