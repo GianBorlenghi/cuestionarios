@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Panel Principal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        nav {
+            background-color: #4CAF50;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        nav h1 {
+            color: white;
+        }
+
+        nav ul {
+            list-style-type: none;
+            display: flex;
+        }
+
+        nav ul li {
+            margin-left: 20px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            transition: background 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            background-color: #3e8e41;
+            border-radius: 4px;
+        }
+
+        .container {
+            display: flex;
+            padding: 20px;
+        }
+
+        .sidebar {
+            width: 20%;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            height: 100vh;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+        }
+
+        .sidebar ul li {
+            margin-bottom: 15px;
+        }
+
+        .sidebar ul li a {
+            color: #333;
+            text-decoration: none;
+            display: block;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            transition: background 0.3s ease;
+        }
+
+        .sidebar ul li a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .main-content {
+            width: 80%;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-left: 20px;
+        }
+
+        .main-content h2 {
+            margin-bottom: 20px;
+        }
+
+        /* Ocultar contenido específico */
+        .admin-only {
+            display: none;
+        }
+
+        .user-only {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <h1>Panel Principal</h1>
+        <ul>
+            <li><a href="#" id="logout">Cerrar Sesión</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <div class="sidebar">
+            <ul id="menuSidebar">
+                <li class="admin-only">
+                    <a href="saveQuestion.html" ">Crear preguntas</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="main-content">
+            <h2 id="welcomeMessage">Bienvenido al Panel Principal</h2>
+            <p>Aquí puedes ver y gestionar toda la información del sistema.</p>
+            <p>Selecciona una opción en el menú lateral para comenzar.</p>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDGIWfXGuqUmTFblk78s-zogcE9FMtKia8",
+            authDomain: "qrcode-ead83.firebaseapp.com",
+            projectId: "qrcode-ead83",
+            storageBucket: "qrcode-ead83.appspot.com",
+            messagingSenderId: "802090216167",
+            appId: "1:802090216167:web:d28899dc1b35730c8e5042",
+            measurementId: "G-YHTKZQ73M1"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth();
+
+        // Verificar autenticación del usuario
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                const userRole = localStorage.getItem('role');
+                const userName = localStorage.getItem('nyap') || 'Usuario';
+                document.getElementById('welcomeMessage').innerText = `Bienvenido, ${userName}`;
+
+                // Mostrar panel basado en el rol
+                if (userRole) {
+                    setTimeout(() => {
+                        displayPanelByRole(userRole);
+                    }, 1700);
+                } else {
+                    location.href = "index.html";
+                }
+
+                // Cargar las categorías desde Firestore
+                loadCategories();
+            } else {
+                location.href = "login.html";
+            }
+        });
+
+        // Definir la función en el objeto global
+        window.enviarQuiz = function(tipo) {
+            window.open(`quiz.html?t=${tipo}`, '_blank');
+        };
+
+        function displayPanelByRole(role) {
+            if (role === 'administrador') {
+                console.log('Mostrando panel administrador');
+                document.querySelectorAll('.admin-only').forEach(el => {
+                    el.style.display = 'block';
+                });
+                document.querySelectorAll('.user-only').forEach(el => {
+                    el.style.display = 'block';
+                });
+            } else {
+                console.log('Mostrando panel usuario');
+                document.querySelectorAll('.user-only').forEach(el => {
+                    el.style.display = 'block';
+                });
+            }
+        }
+
+        // Función para obtener categorías desde Firestore
+        async function loadCategories() {
+            const questionsRef = collection(db, 'questions');
+            const querySnapshot = await getDocs(questionsRef);
+            const categories = new Set();
+
+            querySnapshot.forEach((doc) => {
+                const data = doc.data();
+                if (data.cat) {
+                    categories.add(data.cat);
+                }
+            });
+
+            // Agregar las categorías al menú
+            const menuSidebar = document.getElementById('menuSidebar');
+
+            categories.forEach(category => {
+                const li = document.createElement('li');
+                li.classList.add('user-only');
+                li.innerHTML = `<a href="#" onclick="enviarQuiz('${category}')">Cuestionario ${category}</a>`;
+                menuSidebar.appendChild(li);
+            });
+        }
+
+        // Simular cierre de sesión
+        document.getElementById('logout').addEventListener('click', function () {
+            localStorage.clear();
+            alert('Sesión cerrada.');
+            location.reload();
+        });
+
+    </script>
+
+</body>
+
+</html>

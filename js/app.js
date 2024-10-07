@@ -1,12 +1,10 @@
-emailjs.init("rt1v_cA4avrTQRGue"); 
+
+/*emailjs.init("rt1v_cA4avrTQRGue"); 
 
 
 document.getElementById('loginForm').addEventListener('submit', function(event) {
     event.preventDefault();
 
-    // Credenciales estáticas (puedes modificar esto para usar credenciales dinámicas)
-    /*const validUsername = 'admin';
-    const validPassword = '1234';*/
 
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
@@ -63,7 +61,7 @@ function obtenerUsuario() {
         // Puedes hacer algo con el resultado aquí
     });
 }
-
+*/
 // Array de preguntas y respuestas
 const questions = [
     {
@@ -228,6 +226,358 @@ const questions = [
         type: "multiple"
     }
 ];
+/*
+// Seleccionar 5 preguntas aleatorias
+const selectedQuestions = questions.sort(() => 0.5 - Math.random()).slice(0, 10);
+
+const quizContainer = document.getElementById('quizContainer');
+const quizForm = document.getElementById('quizForm');
+const scoreContainer = document.getElementById('scoreContainer');
+const scoreSpan = document.getElementById('score');
+const resultsContainer = document.getElementById('resultsContainer');
+const mail = document.getElementById("mail");
+const timerDisplay = document.getElementById('timer');
+
+// Configura el temporizador (por ejemplo, 5 minutos = 300000 ms)
+const TIME_LIMIT = 20 * 60 * 1000; // 5 minutos en milisegundos
+const END_TIME_KEY = 'quiz_end_time';
+
+// Verifica si el usuario ya ha respondido
+function checkIfAlreadyAnswered() {
+    const endTime = localStorage.getItem(END_TIME_KEY);
+    if (endTime && Date.now() < parseInt(endTime)) {
+        // El cuestionario ya ha sido respondido o el tiempo no ha expirado
+        quizContainer.innerHTML = '<h2>Ya has respondido este cuestionario o el tiempo ha expirado. Porfavor, revisa tu casilla de E-Mail para visualizarla, o bien consulte a su profesor.</h2>';
+        $("#btnEnviar").addClass("hidden")
+        $("#timerContainer").addClass("hidden")
+        return true;
+    }
+    startTimer();
+    return false;
+}
+
+// Configura el temporizador
+function startTimer() {
+    const endTime = Date.now() + TIME_LIMIT;
+    localStorage.setItem(END_TIME_KEY, endTime.toString());
+    
+    function updateTimer() {
+        const remainingTime = endTime - Date.now();
+        if (remainingTime <= 0) {
+            clearInterval(timerInterval);
+            timerDisplay.textContent = '00:00';
+            quizForm.querySelectorAll('input').forEach(input => input.disabled = true); // Desactiva el formulario
+            alert('El tiempo ha expirado.');
+        } else {
+            const minutes = Math.floor(remainingTime / 60000);
+            const seconds = Math.floor((remainingTime % 60000) / 1000);
+            timerDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+    }
+    
+    updateTimer(); // Actualiza inmediatamente
+    const timerInterval = setInterval(updateTimer, 1000);
+}
+
+
+// Cargar preguntas en el DOM
+selectedQuestions.forEach((q, index) => {
+    const questionDiv = document.createElement('div');
+    questionDiv.classList.add('question');
+    
+    const questionText = document.createElement('p');
+    questionText.textContent = `${index + 1}. ${q.question}`;
+    questionDiv.appendChild(questionText);
+    
+    if (q.type === "multiple") {
+        q.options.forEach(option => {
+            const label = document.createElement('label');
+            const input = document.createElement('input');
+            input.type = 'radio';
+            input.name = `question${index}`;
+            input.value = option;
+            label.appendChild(input);
+            label.appendChild(document.createTextNode(option));
+            questionDiv.appendChild(label);
+            questionDiv.appendChild(document.createElement('br'));
+        });
+    } else if (q.type === "text") {
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.name = `question${index}`;
+        input.placeholder = "Escribe tu respuesta aquí";
+        questionDiv.appendChild(input);
+    }
+
+    quizContainer.appendChild(questionDiv);
+});
+
+// Calcular la puntuación y validar que todas las preguntas estén respondidas
+quizForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    let score = 0;
+    let allAnswered = true;
+    resultsContainer.innerHTML = ''; // Limpiar los resultados previos
+
+    // Verificar si todas las preguntas han sido respondidas
+    selectedQuestions.forEach((q, index) => {
+        const selectedAnswer = document.querySelector(`input[name="question${index}"]:checked`);
+        const textAnswer = document.querySelector(`input[name="question${index}"]`)?.value.trim();
+        if (!selectedAnswer && q.type === "multiple" || (q.type === "text" && !textAnswer)) {
+            allAnswered = false;
+        }
+    });
+
+    // Si no todas las preguntas están respondidas, mostrar una alerta
+    if (!allAnswered) {
+        alert("Por favor, responde todas las preguntas antes de enviar el cuestionario.");
+        return;
+    }
+
+    // Calcular puntuación y mostrar respuestas correctas/incorrectas si todas están respondidas
+    selectedQuestions.forEach((q, index) => {
+        const selectedAnswer = document.querySelector(`input[name="question${index}"]:checked`);
+        const textAnswer = document.querySelector(`input[name="question${index}"]`)?.value.trim().toLowerCase();
+        const resultDiv = document.createElement('div');
+        resultDiv.classList.add('result');
+        
+        if (q.type === "multiple") {
+            if (selectedAnswer && selectedAnswer.value === q.answer) {
+                score++;
+                resultDiv.innerHTML = `<strong>${index + 1}. ${q.question}</strong> - <span class="correct">Correcto</span> | <strong>${q.answer}</strong>`;
+            } else {
+                resultDiv.innerHTML = `<strong>${index + 1}. ${q.question}</strong> - <span class="incorrect">Incorrecto</span>. Respuesta correcta: <strong>${q.answer}</strong>`;
+            }
+        } else if (q.type === "text") {
+            const correctAnswers = q.answers.map(a => a.toLowerCase());
+            if (correctAnswers.includes(textAnswer)) {
+                score++;
+                resultDiv.innerHTML = `<strong>${index + 1}. ${q.question}</strong> - <span class="correct">Correcto</span> | <strong>${textAnswer}</strong>`;
+            } else {
+                resultDiv.innerHTML = `<strong>${index + 1}. ${q.question}</strong> - <span class="incorrect">Incorrecto</span>. Respuesta correcta: <strong>${q.answers.join(', ')}</strong>`;
+            }
+        }
+
+        resultsContainer.appendChild(resultDiv);
+    });
+
+    // Mostrar puntuación
+    quizContainer.classList.add('hidden');
+    scoreContainer.classList.remove('hidden');
+    scoreSpan.textContent = score;
+
+    const emailContent = `
+    <html>
+    <head>
+        <style>
+            .result {
+                margin-bottom: 10px;
+            }
+            .correct {
+                color: green;
+            }
+            .incorrect {
+                color: red;
+            }
+        </style>
+    </head>
+    <body>
+        <h2>Resultado del Cuestionario</h2>
+        <p>Puntuación: ${score}</p>
+        <div>${resultsContainer.innerHTML}</div>
+    </body>
+    </html>
+`;
+console.log($(mail).val())
+
+    const emailParams = {
+        to_email: 'gianborlenghi@abc.gob.ar', // Cambia esto por tu dirección de correo
+        subject: 'Resultado del cuestionario',
+        nombre:localStorage.getItem("nyap"),
+        message:emailContent,
+        mail:localStorage.getItem("mail")+';gianborlenghi@abc.gob.ar'
+    };
+
+    emailjs.send('service_gfwx6fe', 'template_sobke27', emailParams)
+        .then((response) => {
+            console.log('Correo enviado exitosamente:', response);
+        }, (error) => {
+            console.error('Error al enviar el correo:', error);
+        });
+
+    $("#timerContainer").addClass("hidden")
+
+    $("#btnEnviar").addClass("hidden")
+
+
+
+});
+
+
+
+   
+//onsole.log(buscarData("Ana"))
+async function buscarData(nombreUsuario) {
+    try {
+        const response = await fetch('datos.json');
+        const data = await response.json();
+        
+        const obj = data.find(item => item.usuario === nombreUsuario);
+        return obj; // Ahora devolverá el objeto correcto
+    } catch (error) {
+        console.error('Error al leer el archivo JSON:', error);
+    }
+}*/
+
+// Manejar la navegación entre formularios
+
+
+const firebaseConfig = {
+    apiKey: "AIzaSyDGIWfXGuqUmTFblk78s-zogcE9FMtKia8",
+    authDomain: "qrcode-ead83.firebaseapp.com",
+    projectId: "qrcode-ead83",
+    storageBucket: "qrcode-ead83.appspot.com",
+    messagingSenderId: "802090216167",
+    appId: "1:802090216167:web:d28899dc1b35730c8e5042",
+    measurementId: "G-YHTKZQ73M1"       
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+// Inicializa EmailJS
+emailjs.init("rt1v_cA4avrTQRGue");
+
+
+// Función para crear un nuevo usuario
+function crearUsuario(email, password, nombre_ap) {
+    const ahora = new Date();
+
+// Obtener la fecha y hora actual
+const fechaActual = ahora.toLocaleString();
+    return firebase.auth().createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+            // Guardar el nombre del usuario en Firestore
+            return db.collection('users').doc(userCredential.user.uid).set({
+                createdAt: ahora,
+                mail: email,
+                nombre: nombre_ap,
+                pw: password,
+                role: "user",
+
+            });
+        })
+        .then(() => {
+            console.log("Usuario creado y guardado en Firestore");
+            $("#btnRegistrar").prop("disabled",true);
+
+            showLogin();
+        })
+        .catch((error) => {
+            console.error("Error al crear el usuario:", error);
+            console.log(error)
+            document.getElementById('registerError').classList.remove('hidden');
+            $("#btnRegistrar").prop("disabled",false);
+
+        });
+}
+
+// Evento para el formulario de inicio de sesión
+document.getElementById('loginForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    $("#btnIniciar").prop("disabled", true);
+    const email = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+
+    auth.signInWithEmailAndPassword(email, password)
+        .then(async (userCredential) => {
+            alert('Inicio de sesión exitoso');
+
+            // Guardar datos del usuario en localStorage
+            localStorage.setItem('user', JSON.stringify({
+                email: userCredential.user.email,
+                uid: userCredential.user.uid
+            }));
+            
+
+            document.getElementById('loginForm').reset();
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem("mail",userCredential.user.email)
+            
+            // Verificar rol del usuario
+            const uidUser = userCredential.user.uid; // Obtener el UID del usuario autenticado}
+            const userDocRef = firebase.firestore().doc(`users/${uidUser}`);
+            const userDoc = await userDocRef.get();
+            
+            if (userDoc.exists) {
+                const userData = userDoc.data();
+                localStorage.setItem("nyap",userData.nombre)
+                if (userData.role === "administrador") {
+                    localStorage.setItem('role',userData.role)
+
+                    // Si el usuario es administrador, mostrar el contenido de preguntas
+                    //document.getElementById('quizContent').classList.remove('hidden');
+                    document.getElementById('loginContainer').classList.add('hidden');
+                    location.href="saveQuestion.html";
+
+                    showQuiz(); // Muestra el cuestionario
+                } else {
+                    localStorage.setItem('role',userData.role)
+                    location.href="panelPrincipal.html";
+
+                    // Opcional: Cierra la sesión o redirige a una página de error
+                }
+            } else {
+                alert("No se encontró la información del usuario.");
+            }
+            $("#btnIniciar").prop("disabled", false);
+        })
+        .catch((error) => {
+            document.getElementById('loginError').classList.remove('hidden');
+            console.error("Error al iniciar sesión:", error.message);
+            $("#btnIniciar").prop("disabled", false);
+        });
+});
+
+// Evento para el formulario de registro
+document.getElementById('registerForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const email = document.getElementById('registerEmail').value;
+    const password = document.getElementById('registerPassword').value;
+    const nombre_ap = document.getElementById('registerNombre').value;
+
+    crearUsuario(email, password, nombre_ap);
+    
+});
+
+// Función para verificar el estado de inicio de sesión
+function checkLoginStatus() {
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    if (isLoggedIn === 'true') {
+        showQuiz();
+    } else {
+        showLogin();
+    }
+}
+
+
+
+/*function showQuiz() {
+    $("#navb").addClass("hidden")
+    document.getElementById('loginContainer').classList.add('hidden');
+    document.getElementById('quizContent').classList.remove('hidden');
+    checkIfAlreadyAnswered();
+
+}
+
+
+
+
+// Array de preguntas y respuestas
+
 
 // Seleccionar 5 preguntas aleatorias
 const selectedQuestions = questions.sort(() => 0.5 - Math.random()).slice(0, 10);
@@ -429,5 +779,35 @@ async function buscarData(nombreUsuario) {
         return obj; // Ahora devolverá el objeto correcto
     } catch (error) {
         console.error('Error al leer el archivo JSON:', error);
+    }
+}*/
+
+document.getElementById('loginNav').addEventListener('click', function(event) {
+    event.preventDefault();
+    showLogin();
+});
+
+document.getElementById('registerNav').addEventListener('click', function(event) {
+    event.preventDefault();
+    showRegister();
+});
+
+// Función para mostrar el formulario de registro
+function showRegister() {
+    document.getElementById('loginContainer').classList.add('hidden');
+    document.getElementById('registerContainer').classList.remove('hidden');
+}
+
+// Modificación de la función para mostrar el formulario de inicio de sesión
+function showLogin() {
+    document.getElementById('loginContainer').classList.remove('hidden');
+    document.getElementById('registerContainer').classList.add('hidden');
+}
+
+
+function checkIfUserIsLogged(){
+    if(localStorage.getItem("user")!==null){
+        alert("usuario ya logueado");
+        location.href = "panelPrincipal.html"
     }
 }

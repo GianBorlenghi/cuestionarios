@@ -61,6 +61,22 @@ h1 {
     border: 1px solid #ccc; /* Borde suave */
     box-sizing: border-box; /* Asegura que el padding no agrande el width */
 }
+#registerForm input,
+#registerForm button {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Espacio entre los elementos del formulario */
+    width: 300px; /* Puedes ajustar este valor según tus necesidades */
+    padding: 10px; /* Añade algo de espacio interno */
+    margin: 10px 0; /* Espacio entre los elementos */
+    border-radius: 5px; /* Bordes redondeados para mejor estética */
+    border: 1px solid #ccc; /* Borde suave */
+    box-sizing: border-box; /* Asegura que el padding no agrande el width */
+}
 
 /* Estilos para centrar el loginContainer */
 
@@ -161,11 +177,45 @@ button:hover {
     }
 }
 
+nav {
+    background-color: #333;
+    padding: 10px;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 20px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+
+
+form {
+    margin-top: 20px;
+}
+
+
+
 
 @media (max-width: 767px) {
     #loginForm input,
     #loginForm button,
-    #quizForm button {
+    #quizForm button 
+    #registerForm input
+   {
         width: 100%; /* En pantallas pequeñas, los inputs y botones ocupan el 100% del ancho del contenedor */
     }
 

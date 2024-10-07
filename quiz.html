@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuestionario Evaluativo</title>
+    <link rel="stylesheet" href="estilos.css">
+    <link rel="icon" href="./assets/img/cens.png" type="image/x-icon">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+   
+    
+    <script type="module" src="./js/quiz.js" ></script>
+</head>
+<body>
+    <div id="quizContent">
+        <div id="timerContainer">
+            Tiempo restante: <span id="timer">00:00</span>
+        </div>
+        <div class="container">
+            <figure>
+                <a href="./index.html"><img class="logo" src="./assets/img/cens.png" alt=""></a>
+            </figure>
+            <h1>Cuestionario evaluativo</h1>
+            <form id="quizForm">
+                <div id="quizContainer"></div>
+                <button type="submit" id="btnEnviar">Enviar</button>
+            </form>
+            <div id="scoreContainer" class="hidden">
+                <h2>Tu puntuación es: <span id="scoreSpan"></span></h2>
+            </div>
+            <div id="resultsContainer"></div>
+        </div>
+    </div>
+     <!-- Archivo JS específico para el cuestionario -->
+</body>
+</html>

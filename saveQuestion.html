@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guardar Preguntas</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <style>
+      body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        nav {
+            background: linear-gradient(90deg, #4CAF50, #81C784);
+            padding: 15px 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            color: white;
+            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        nav h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        nav ul li {
+            margin-left: 20px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            transition: background 0.3s;
+            border-radius: 5px;
+        }
+
+        nav ul li a:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%; /* Cambiado a 90% para mejorar la responsividad */
+            margin-top: 80px; /* Espacio para el nav */
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        label {
+            font-weight: bold;
+            color: #555;
+            display: block;
+            margin-top: 10px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .message {
+            margin-top: 20px;
+            text-align: center;
+            color: #4CAF50;
+        }
+
+        .option-group {
+            display: flex;
+            align-items: center;
+            margin-top: 5px;
+            flex-wrap: wrap; /* Permite que las opciones se envuelvan en pantallas más pequeñas */
+        }
+
+        .option-group input {
+            flex: 1;
+            margin-right: 10px; 
+        }
+
+        .remove-option {
+            background-color: #ff6347;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            flex-shrink: 0; /* Impide que el botón se reduzca de tamaño */
+        }
+
+        .remove-option:hover {
+            background-color: #ff4500;
+        }
+
+        #addOptionBtn {
+            background-color: #007bff;
+            margin-top: 10px;
+        }
+
+        #addOptionBtn:hover {
+            background-color: #0056b3;
+        }
+
+        /* Media query para pantallas más pequeñas */
+        @media (max-width: 480px) {
+            nav h1 {
+                font-size: 20px; /* Reduce el tamaño del texto en la barra de navegación */
+            }
+
+            button {
+                font-size: 14px; /* Reduce el tamaño del botón en pantallas pequeñas */
+            }
+
+            .option-group input {
+                margin-right: 5px; /* Reduce el margen entre el input y el botón de eliminar */
+            }
+
+            .option-group {
+                flex-direction: column; /* Cambia la dirección del flex en pantallas pequeñas */
+                align-items: flex-start; /* Alinea los elementos al inicio */
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <h1>Panel Principal</h1>
+        <ul>
+            <li><a href="panelPrincipal.html" id="">Panel Principal</a></li>
+            <li><a href="#" id="logout">Cerrar Sesión</a></li>
+
+        </ul>
+    </nav>
+    <div class="container" id="adminContainer" style="display:none;"> <!-- Contenedor oculto inicialmente -->
+        <h1>Ingresar Pregunta</h1>
+        <form id="questionForm">
+            <label for="question">Pregunta:</label>
+            <input type="text" id="question" name="question" required>
+
+            <div id="optionsContainer">
+                <div class="option-group">
+                    <input type="text" class="option" name="option1" placeholder="Opción 1" required>
+                </div>
+                <div class="option-group">
+                    <input type="text" class="option" name="option2" placeholder="Opción 2" required>
+                </div>
+            </div>
+
+            <button type="button" id="addOptionBtn">Agregar otra opción</button>
+
+            <label for="answer">Respuesta correcta:</label>
+            <input type="text" id="answer" name="answer" required>
+
+            
+            <label for="cat">Categoría de pregunta:</label>
+            <input type="text" id="cat" name="cat" required>
+
+            <label for="type">Tipo de pregunta:</label>
+            <select id="type" name="type" required>
+                <option value="multiple">Múltiple</option>
+                <option value="verdadero_falso">Verdadero/Falso</option>
+            </select>
+
+            <button type="submit">Guardar Pregunta</button>
+
+            <div class="message" id="message"></div>
+        </form>
+
+        <div id="noAccessMessage" class="message" style="display:none; color:red;">No tienes permisos para agregar preguntas.</div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+
+    
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDGIWfXGuqUmTFblk78s-zogcE9FMtKia8",
+            authDomain: "qrcode-ead83.firebaseapp.com",
+            projectId: "qrcode-ead83",
+            storageBucket: "qrcode-ead83.appspot.com",
+            messagingSenderId: "802090216167",
+            appId: "1:802090216167:web:d28899dc1b35730c8e5042",
+            measurementId: "G-YHTKZQ73M1"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth();
+
+        const form = document.getElementById('questionForm');
+        const messageDiv = document.getElementById('message');
+        const noAccessMessage = document.getElementById('noAccessMessage');
+        const optionsContainer = document.getElementById('optionsContainer');
+        let optionCount = 2;
+
+        // Verificar el rol del usuario autenticado
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const uidUser = user.uid;
+                const userDocRef = doc(db, "users", uidUser);
+
+                try {
+                    const userDoc = await getDoc(userDocRef);
+                    if (userDoc.exists()) {
+                        const userData = userDoc.data();
+                        if (userData.role === "administrador") {
+                            document.getElementById('adminContainer').style.display = 'block'; // Mostrar el contenedor si es admin
+                        } else {
+                            noAccessMessage.textContent = "No tienes permisos para agregar preguntas.";
+                            noAccessMessage.style.display = 'block';
+                        }
+                    } else {
+                        noAccessMessage.textContent = "No se encontró la información del usuario.";
+                        noAccessMessage.style.display = 'block';
+                    }
+                } catch (error) {
+                    console.error("Error al acceder al documento del usuario: ", error);
+                    noAccessMessage.textContent = "Error al acceder a los datos del usuario.";
+                    noAccessMessage.style.display = 'block';
+                }
+            } else {
+                noAccessMessage.textContent = "Usuario no autenticado.";
+                noAccessMessage.style.display = 'block';
+            }
+        });
+
+        // Función para agregar una nueva opción
+        document.getElementById('addOptionBtn').addEventListener('click', function () {
+            optionCount++;
+            const optionGroup = document.createElement('div');
+            optionGroup.classList.add('option-group');
+            optionGroup.innerHTML = `
+                <input type="text" class="option" name="option${optionCount}" placeholder="Opción ${optionCount}" required>
+            `;
+            optionsContainer.appendChild(optionGroup);
+        });
+
+        // Función para guardar la pregunta
+        form.addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const question = document.getElementById('question').value.trim();
+            const answer = document.getElementById('answer').value.trim().toUpperCase();
+            const type = document.getElementById('type').value;
+            const cat = document.getElementById('cat').value.trim();
+
+
+            // Obtener todas las opciones
+            const options = Array.from(document.querySelectorAll('.option')).map(input => input.value.trim().toUpperCase());
+            try {
+                await addDoc(collection(db, "questions"), {
+                    question: question,
+                    options: options,
+                    answer: answer,
+                    cat:cat,
+                    type: type
+                });
+
+                messageDiv.textContent = "Pregunta guardada con éxito!";
+                form.reset();
+                optionsContainer.innerHTML = '';
+                optionCount = 2;
+            } catch (error) {
+                console.error("Error al guardar la pregunta: ", error);
+                messageDiv.textContent = "Error al guardar la pregunta.";
+            }
+        });
+        document.getElementById('logout').addEventListener('click', function () {
+            localStorage.clear();
+            alert('Sesión cerrada.');
+            location.reload();
+        });
+    </script>
+</body>
+</html>
